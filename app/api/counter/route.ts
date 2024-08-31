@@ -1,12 +1,22 @@
-import { NextResponse } from 'next/server'
+// app/api/counter/route.ts
+import { NextResponse } from 'next/server';
+import { getCounter, setCounter } from '../../../lib/db';
 
-let count = 0
+let inMemoryCount: number = 0;
 
 export async function GET() {
-    return NextResponse.json({ count })
+    if (inMemoryCount === 0) {
+        inMemoryCount = await getCounter();
+    }
+    return NextResponse.json({ count: inMemoryCount });
 }
 
 export async function POST() {
-    count++
-    return NextResponse.json({ count })
+    inMemoryCount++;
+
+    if (inMemoryCount % 10 === 0) {
+        await setCounter(inMemoryCount);
+    }
+
+    return NextResponse.json({ count: inMemoryCount });
 }
