@@ -1,113 +1,166 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
+import { useState, useRef, useEffect } from 'react'
+import { Textarea } from "@/components/ui/textarea"
+import { Card, CardContent } from "@/components/ui/card"
+import { FileImage, Code, Download, AlertCircle, Sun, Moon } from 'lucide-react'
+import { Button } from "@/components/ui/button"
+// import { Switch } from "@/components/ui/switch"
+import { Switch } from "../components/ui/switch"
+
+export default function SvgToImageConverter() {
+  const [svgInput, setSvgInput] = useState('')
+  const [imageOutput, setImageOutput] = useState('')
+  const [error, setError] = useState('')
+  const [conversionCount, setConversionCount] = useState(0)
+  const [darkMode, setDarkMode] = useState(false)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+
+  useEffect(() => {
+    fetch('/api/counter')
+      .then(res => res.json())
+      .then(data => setConversionCount(data.count))
+  }, [])
+
+  useEffect(() => {
+    const convertSvgToPng = async () => {
+      if (!svgInput.trim()) {
+        setImageOutput('')
+        setError('')
+        return
+      }
+
+      const canvas = canvasRef.current
+      if (!canvas) return
+
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return
+
+      const img = new Image()
+      const svgBlob = new Blob([svgInput], { type: 'image/svg+xml;charset=utf-8' })
+      const url = URL.createObjectURL(svgBlob)
+
+      img.onload = async () => {
+        canvas.width = img.width || 300
+        canvas.height = img.height || 150
+        ctx.drawImage(img, 0, 0)
+        const pngUrl = canvas.toDataURL('image/png')
+        setImageOutput(pngUrl)
+        setError('')
+        URL.revokeObjectURL(url)
+
+        const response = await fetch('/api/counter', { method: 'POST' })
+        const data = await response.json()
+        setConversionCount(data.count)
+      }
+
+      img.onerror = () => {
+        setError('Invalid SVG code. Please check your input.')
+        setImageOutput('')
+      }
+
+      img.src = url
+    }
+
+    const debounce = setTimeout(() => {
+      convertSvgToPng()
+    }, 500)
+
+    return () => clearTimeout(debounce)
+  }, [svgInput])
+
+  const handleDownload = () => {
+    if (imageOutput) {
+      const link = document.createElement('a')
+      link.href = imageOutput
+      link.download = 'converted-image.png'
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'} transition-colors duration-300`}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative pb-16">
+        <div className="absolute top-4 right-4 flex items-center space-x-2">
+          <Sun className="h-5 w-5" />
+          <Switch
+            checked={darkMode}
+            onCheckedChange={setDarkMode}
+            className={`${darkMode ? 'bg-indigo-600' : 'bg-gray-200'} relative inline-flex h-6 w-11 items-center rounded-full`}
           >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
+            <span className="sr-only">Toggle dark mode</span>
+            <span
+              className={`${darkMode ? 'translate-x-6' : 'translate-x-1'
+                } inline-block h-4 w-4 transform rounded-full bg-white transition`}
             />
-          </a>
+          </Switch>
+          <Moon className="h-5 w-5" />
+        </div>
+        <header className="text-center py-12 sm:py-16 md:py-20">
+          <div className={`inline-block p-2 rounded-lg shadow-lg mb-4 ${darkMode ? 'bg-indigo-600' : 'bg-gradient-to-r from-indigo-500 to-purple-600'}`}>
+            <FileImage size={40} className="text-white" />
+          </div>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2">SVG to Image Converter</h1>
+          <p className={`text-lg sm:text-xl ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Transform your SVG code into beautiful PNG images instantly</p>
+        </header>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <Card className={`rounded-xl shadow-xl overflow-hidden ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+            <CardContent className="p-4 sm:p-6">
+              <h2 className={`text-xl font-semibold mb-4 flex items-center ${darkMode ? 'text-gray-100' : 'text-gray-700'}`}>
+                <Code className="mr-2 text-indigo-500" /> Input SVG
+              </h2>
+              <Textarea
+                placeholder="Paste your SVG code here..."
+                value={svgInput}
+                onChange={(e) => setSvgInput(e.target.value)}
+                className={`min-h-[200px] sm:min-h-[300px] mb-4 rounded-lg ${darkMode
+                  ? 'bg-gray-700 text-gray-100 border-gray-600 focus:border-indigo-500'
+                  : 'bg-white text-gray-900 border-gray-300 focus:border-indigo-500'
+                  }`}
+              />
+              {error && (
+                <div className="flex items-center text-red-500 mt-2">
+                  <AlertCircle className="mr-2" size={16} />
+                  <span>{error}</span>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className={`rounded-xl shadow-xl overflow-hidden ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+            <CardContent className="p-4 sm:p-6">
+              <h2 className={`text-xl font-semibold mb-4 flex items-center ${darkMode ? 'text-gray-100' : 'text-gray-700'}`}>
+                <FileImage className="mr-2 text-indigo-500" /> Output Image
+              </h2>
+              <div className={`border-2 border-dashed rounded-lg p-4 min-h-[200px] sm:min-h-[300px] flex items-center justify-center ${darkMode ? 'border-gray-600 bg-gray-700' : 'border-gray-200 bg-gray-50'
+                }`}>
+                {imageOutput ? (
+                  <img src={imageOutput} alt="Converted PNG" className="max-w-full max-h-[200px] sm:max-h-[300px] rounded shadow-lg" />
+                ) : (
+                  <p className={`text-center ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                    <FileImage size={48} className="mx-auto mb-2 text-indigo-400" />
+                    Converted image will appear here
+                  </p>
+                )}
+              </div>
+              {imageOutput && (
+                <Button onClick={handleDownload} className="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
+                  <Download className="mr-2" size={18} />
+                  Download PNG
+                </Button>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+        <canvas ref={canvasRef} style={{ display: 'none' }} />
+        <div className={`absolute bottom-4 right-4 rounded-full px-3 py-1 text-sm font-semibold shadow ${darkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-700'
+          }`}>
+          Total Conversions: {conversionCount}
         </div>
       </div>
-
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
+    </div>
+  )
 }
