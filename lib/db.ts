@@ -5,12 +5,9 @@ export async function getCounter(): Promise<number> {
     try {
         const result = await sql`SELECT value FROM counter where id = 1`;
         if (result.rows.length > 0) {
-            return result.rows[0].count;
-        } else {
-            // Initialize the counter in the database if it doesn't exist
-            await sql`INSERT INTO counter (count) VALUES (0)`;
-            return 0;
+            return result.rows[0].value;
         }
+        return 0;
     } catch (error) {
         console.error('Error fetching counter from database:', error);
         throw error;
