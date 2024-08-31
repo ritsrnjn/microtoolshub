@@ -3,7 +3,7 @@ import { sql } from '@vercel/postgres';
 
 export async function getCounter(): Promise<number> {
     try {
-        const result = await sql`SELECT count FROM counter LIMIT 1`;
+        const result = await sql`SELECT value FROM counter where id = 1`;
         if (result.rows.length > 0) {
             return result.rows[0].count;
         } else {
@@ -19,7 +19,7 @@ export async function getCounter(): Promise<number> {
 
 export async function setCounter(count: number): Promise<void> {
     try {
-        await sql`UPDATE counter SET count = ${count}`;
+        await sql`UPDATE counter SET value = ${count} WHERE id = 1`;
     } catch (error) {
         console.error('Error updating counter in database:', error);
         throw error;
