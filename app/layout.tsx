@@ -3,10 +3,11 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
 import Link from 'next/link'
-import { FileImage, FileText, Clock, ChevronLeft, ChevronRight, Github, Menu } from 'lucide-react'
+import { FileImage, FileText, Clock, ChevronLeft, ChevronRight, Github, Menu, Wrench } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
+import Footer from '@/components/layout/footer'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -56,6 +57,12 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <div className="flex h-screen bg-gray-100">
+
+          {/* There are 3 main componets in this layout:
+          - Sidebar
+          - Main content
+          - Fixed Footer */}
+
           {/* Sidebar */}
           <AnimatePresence>
             {sidebarOpen && (
@@ -72,7 +79,7 @@ export default function RootLayout({
                       whileTap={{ scale: 0.95 }}
                       className="flex items-center space-x-2"
                     >
-                      {/* <Tool className="h-8 w-8 text-indigo-600" /> */}
+                      {/* <Wrench className="h-8 w-8 text-indigo-600" /> */}
                       <div className="relative">
                         <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">
                           Micro Tools Hub
@@ -134,27 +141,12 @@ export default function RootLayout({
                 {children}
               </div>
             </main>
-
-            {/* Fixed Footer */}
-            <footer className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 py-2 px-4 z-10">
-              <div className="flex flex-col sm:flex-row justify-between items-center max-w-6xl mx-auto">
-                {/* <footer className="bg-white border-t border-gray-200 py-2 px-4 z-10">
-              <div className="flex flex-col sm:flex-row justify-between items-center max-w-6xl mx-auto"> */}
-                <p className="text-sm text-gray-600 mb-2 sm:mb-0">
-                  {toolInfo.name} was created by {toolInfo.creator}
-                </p>
-                <Link
-                  href="https://github.com/ritsrnjn/svg-to-image/issues"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center px-3 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-700 transition-colors duration-200"
-                >
-                  <Github className="mr-2 h-4 w-4" />
-                  Found an issue? Report here
-                </Link>
-              </div>
-            </footer>
           </div>
+
+          {/* Fixed Footer */}
+          <Footer toolInfo={toolInfo} />
+
+
         </div>
       </body>
     </html>
