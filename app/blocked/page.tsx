@@ -28,7 +28,7 @@ const BlockedPage = () => {
       <div className="max-w-md w-full p-8 bg-white shadow-lg rounded-lg">
         <h1 className="text-3xl font-bold text-center text-red-600 mb-4">Access Blocked</h1>
         <p className="text-gray-700 text-center mb-6">
-          We're sorry, but you don't have permission to access this page. If you believe this is an error, please contact the administrator.
+          We&apos;re sorry, but you don&apos;t have permission to access this page. If you believe this is an error, please contact the administrator.
         </p>
         <div className="flex flex-col items-center">
           <button 
