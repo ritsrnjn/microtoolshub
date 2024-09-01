@@ -12,7 +12,7 @@ export default function SvgToImageConverter() {
   const [svgInput, setSvgInput] = useState('')
   const [imageOutput, setImageOutput] = useState('')
   const [error, setError] = useState('')
-  const [conversionCount, setConversionCount] = useState(0)
+  const [conversionCount, setConversionCount] = useState<number | null>(null)
   const [darkMode, setDarkMode] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -20,6 +20,7 @@ export default function SvgToImageConverter() {
     fetch('/api/counter')
       .then(res => res.json())
       .then(data => setConversionCount(data.count))
+      .catch(err => console.error('Error fetching conversion count:', err))
   }, [])
 
   useEffect(() => {
@@ -49,9 +50,10 @@ export default function SvgToImageConverter() {
         setError('')
         URL.revokeObjectURL(url)
 
-        const response = await fetch('/api/counter', { method: 'POST' })
-        const data = await response.json()
-        setConversionCount(data.count)
+        fetch('/api/counter', { method: 'POST' })
+          .then(res => res.json())
+          .then(data => setConversionCount(data.count))
+          .catch(error => console.error('Error fetching conversion count:', error))
       }
 
       img.onerror = () => {
@@ -158,7 +160,7 @@ export default function SvgToImageConverter() {
         <canvas ref={canvasRef} style={{ display: 'none' }} />
         <div className={`absolute bottom-4 right-4 rounded-full px-3 py-1 text-sm font-semibold shadow ${darkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-700'
           }`}>
-          Total Conversions: {conversionCount}
+          Total Conversions: {conversionCount !== null ? conversionCount : '  Loading...'}
         </div>
       </div>
     </div>
