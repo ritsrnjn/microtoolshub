@@ -15,6 +15,10 @@ export async function POST() {
     inMemoryCount++;
 
     if (inMemoryCount % 10 === 0) {
+        let currentCountInDb = await getCounter();
+        if (currentCountInDb < inMemoryCount) {
+            inMemoryCount = currentCountInDb;
+        }
         await setCounter(inMemoryCount);
     }
 
