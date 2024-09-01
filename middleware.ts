@@ -10,7 +10,7 @@ const ratelimit = new Ratelimit({
 
 // Define which routes you want to rate limit
 export const config = {
-  matcher: '/',
+  matcher: ['/', '/text-compare', '/svg-to-png', '/epoch-converter'],
 };
 
 export default async function middleware(request: NextRequest) {
