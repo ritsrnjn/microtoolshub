@@ -5,7 +5,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
 import { FileImage, Code, Download, AlertCircle } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import { useDarkMode } from '@/hooks/useDarkMode'
+
+// Note: This is using differnt approach for setting the dark
 
 export default function SvgToImageConverter() {
     const [svgInput, setSvgInput] = useState('')
@@ -13,7 +14,6 @@ export default function SvgToImageConverter() {
     const [error, setError] = useState('')
     const [conversionCount, setConversionCount] = useState<number | null>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
-    const { darkMode } = useDarkMode()
 
     useEffect(() => {
         fetch('/api/counter')
@@ -82,32 +82,27 @@ export default function SvgToImageConverter() {
     }
 
     return (
-        // Note: A different approach of doing dark mode.
-        // <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300"></div>
-        <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'} transition-colors duration-300`}>
+        <div className="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative pb-16">
                 <header className="text-center py-12 sm:py-16 md:py-20">
-                    <div className={`inline-block p-2 rounded-lg shadow-lg mb-4 ${darkMode ? 'bg-indigo-600' : 'bg-gradient-to-r from-indigo-500 to-purple-600'}`}>
+                    <div className="inline-block p-2 rounded-lg shadow-lg mb-4 bg-gradient-to-r from-indigo-500 to-purple-600 dark:from-indigo-600 dark:to-purple-700">
                         <FileImage size={40} className="text-white" />
                     </div>
                     <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2">SVG to Image Converter</h1>
-                    <p className={`text-lg sm:text-xl ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Transform your SVG code into beautiful PNG images instantly</p>
+                    <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300">Transform your SVG code into beautiful PNG images instantly</p>
                 </header>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <Card className={`rounded-xl shadow-xl overflow-hidden ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+                    <Card className="rounded-xl shadow-xl overflow-hidden bg-white dark:bg-gray-800">
                         <CardContent className="p-4 sm:p-6">
-                            <h2 className={`text-xl font-semibold mb-4 flex items-center ${darkMode ? 'text-gray-100' : 'text-gray-700'}`}>
+                            <h2 className="text-xl font-semibold mb-4 flex items-center text-gray-700 dark:text-gray-200">
                                 <Code className="mr-2 text-indigo-500" /> Input SVG
                             </h2>
                             <Textarea
                                 placeholder="Paste your SVG code here..."
                                 value={svgInput}
                                 onChange={(e) => setSvgInput(e.target.value)}
-                                className={`min-h-[200px] sm:min-h-[300px] mb-4 rounded-lg ${darkMode
-                                    ? 'bg-gray-700 text-gray-100 border-gray-600 focus:border-indigo-500'
-                                    : 'bg-white text-gray-900 border-gray-300 focus:border-indigo-500'
-                                    }`}
+                                className="min-h-[200px] sm:min-h-[300px] mb-4 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:border-indigo-500 dark:focus:border-indigo-400"
                             />
                             {error && (
                                 <div className="flex items-center text-red-500 mt-2">
@@ -118,17 +113,16 @@ export default function SvgToImageConverter() {
                         </CardContent>
                     </Card>
 
-                    <Card className={`rounded-xl shadow-xl overflow-hidden ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+                    <Card className="rounded-xl shadow-xl overflow-hidden bg-white dark:bg-gray-800">
                         <CardContent className="p-4 sm:p-6">
-                            <h2 className={`text-xl font-semibold mb-4 flex items-center ${darkMode ? 'text-gray-100' : 'text-gray-700'}`}>
+                            <h2 className="text-xl font-semibold mb-4 flex items-center text-gray-700 dark:text-gray-200">
                                 <FileImage className="mr-2 text-indigo-500" /> Output Image
                             </h2>
-                            <div className={`border-2 border-dashed rounded-lg p-4 min-h-[200px] sm:min-h-[300px] flex items-center justify-center ${darkMode ? 'border-gray-600 bg-gray-700' : 'border-gray-200 bg-gray-50'
-                                }`}>
+                            <div className="border-2 border-dashed rounded-lg p-4 min-h-[200px] sm:min-h-[300px] flex items-center justify-center bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600">
                                 {imageOutput ? (
                                     <img src={imageOutput} alt="Converted PNG" className="max-w-full max-h-[200px] sm:max-h-[300px] rounded shadow-lg" />
                                 ) : (
-                                    <p className={`text-center ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                    <p className="text-center text-gray-500 dark:text-gray-400">
                                         <FileImage size={48} className="mx-auto mb-2 text-indigo-400" />
                                         Converted image will appear here
                                     </p>
@@ -144,8 +138,7 @@ export default function SvgToImageConverter() {
                     </Card>
                 </div>
                 <canvas ref={canvasRef} style={{ display: 'none' }} />
-                <div className={`absolute bottom-4 right-4 rounded-full px-3 py-1 text-sm font-semibold shadow ${darkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-700'
-                    }`}>
+                <div className="absolute bottom-4 right-4 rounded-full px-3 py-1 text-sm font-semibold shadow bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                     Total Conversions: {conversionCount !== null ? conversionCount : '  Loading...'}
                 </div>
             </div>
