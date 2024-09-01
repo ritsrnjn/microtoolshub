@@ -41,13 +41,13 @@ export default function RootLayout({
   const getToolInfo = () => {
     switch (pathname) {
       case '/svg-to-png':
-        return { name: 'SVG to PNG Tool', creator: 'Alice Johnson' }
+        return { name: 'SVG to PNG Tool', creator: 'Ritesh Ranjan' }
       case '/text-compare':
-        return { name: 'Text Compare Tool', creator: 'Bob Smith' }
+        return { name: 'Text Compare Tool', creator: 'Ritesh Ranjan' }
       case '/epoch-converter':
-        return { name: 'Epoch Converter Tool', creator: 'Charlie Brown' }
+        return { name: 'Epoch Converter Tool', creator: 'Ritesh Ranjan' }
       default:
-        return { name: 'Micro Tools Hub', creator: 'The Dev Team' }
+        return { name: 'Micro Tools Hub', creator: 'Ritesh Ranjan' }
     }
   }
 
