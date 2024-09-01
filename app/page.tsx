@@ -71,7 +71,13 @@ export default function Home() {
 }
 
 
-function FeatureCard({ icon, title, description }) {
+interface FeatureCardProps {
+  icon: any;
+  title: string;
+  description: string;
+}
+
+function FeatureCard({ icon, title, description }: FeatureCardProps) {
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex items-center mb-4">
