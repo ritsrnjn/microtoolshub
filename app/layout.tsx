@@ -1,77 +1,160 @@
-// import type { Metadata } from "next";
-// import { Inter } from "next/font/google";
-// import "./globals.css";
-
-// const inter = Inter({ subsets: ["latin"] });
-
-// export const metadata: Metadata = {
-//   title: "Svg To Image - Convert SVG to PNG",
-//   description: "Convert and download SVG to PNG image online",
-//   icons: [
-//     { url: '/favicon.ico', sizes: 'any' },
-//   ],
-// };
-
-// export default function RootLayout({
-//   children,
-// }: Readonly<{
-//   children: React.ReactNode;
-// }>) {
-//   return (
-//     <html lang="en">
-//       <body className={inter.className}>{children}</body>
-//     </html>
-//   );
-// }
-
-
+"use client"
 
 import './globals.css'
 import { Inter } from 'next/font/google'
 import Link from 'next/link'
-import { FileImage, FileText, Clock } from 'lucide-react'
+import { FileImage, FileText, Clock, ChevronLeft, ChevronRight, Github, Menu } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const inter = Inter({ subsets: ['latin'] })
-
-export const metadata = {
-  title: 'Micro Tools Hub',
-  description: 'A collection of useful micro tools',
-}
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const pathname = usePathname()
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setSidebarOpen(false)
+      } else {
+        setSidebarOpen(true)
+      }
+    }
+
+    window.addEventListener('resize', handleResize)
+    handleResize()
+
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen)
+  }
+
+  const getToolInfo = () => {
+    switch (pathname) {
+      case '/svg-to-png':
+        return { name: 'SVG to PNG Tool', creator: 'Alice Johnson' }
+      case '/text-compare':
+        return { name: 'Text Compare Tool', creator: 'Bob Smith' }
+      case '/epoch-converter':
+        return { name: 'Epoch Converter Tool', creator: 'Charlie Brown' }
+      default:
+        return { name: 'Micro Tools Hub', creator: 'The Dev Team' }
+    }
+  }
+
+  const toolInfo = getToolInfo()
+
   return (
     <html lang="en">
       <body className={inter.className}>
         <div className="flex h-screen bg-gray-100">
           {/* Sidebar */}
-          <aside className="w-64 bg-white shadow-md">
-            <nav className="mt-5">
-              <Link href="/" className="block py-2 px-4 text-gray-600 hover:bg-gray-200">
-                Home
-              </Link>
-              <Link href="/svg-to-png" className="flex items-center py-2 px-4 text-gray-600 hover:bg-gray-200">
-                <FileImage className="mr-2 h-5 w-5" />
-                SVG to PNG
-              </Link>
-              <Link href="/text-compare" className="flex items-center py-2 px-4 text-gray-600 hover:bg-gray-200">
-                <FileText className="mr-2 h-5 w-5" />
-                Text Compare
-              </Link>
-              <Link href="/epoch-converter" className="flex items-center py-2 px-4 text-gray-600 hover:bg-gray-200">
-                <Clock className="mr-2 h-5 w-5" />
-                Epoch Converter
-              </Link>
-            </nav>
-          </aside>
+          <AnimatePresence>
+            {sidebarOpen && (
+              <motion.aside
+                initial={{ width: 0, opacity: 0 }}
+                animate={{ width: 256, opacity: 1 }}
+                exit={{ width: 0, opacity: 0 }}
+                className="bg-white shadow-md overflow-hidden flex-shrink-0"
+              >
+                <nav className="h-full flex flex-col py-5 relative">
+                  <div className="px-4 flex justify-between items-center mb-6">
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center space-x-2"
+                    >
+                      {/* <Tool className="h-8 w-8 text-indigo-600" /> */}
+                      <div className="relative">
+                        <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">
+                          Micro Tools Hub
+                        </span>
+                        <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 transform scale-x-0 transition-transform origin-left group-hover:scale-x-100"></span>
+                      </div>
+                    </motion.div>
+                    <button
+                      onClick={toggleSidebar}
+                      className="p-1 rounded-full hover:bg-gray-200 transition-colors duration-200"
+                      aria-label="Toggle Sidebar"
+                    >
+                      <ChevronLeft size={20} />
+                    </button>
+                  </div>
+                  <div className="space-y-2">
+                    {[
+                      { href: '/svg-to-png', icon: FileImage, label: 'SVG to PNG' },
+                      { href: '/text-compare', icon: FileText, label: 'Text Compare' },
+                      { href: '/epoch-converter', icon: Clock, label: 'Epoch Converter' },
+                    ].map((item) => (
+                      <motion.div
+                        key={item.href}
+                        whileHover={{ scale: 1.05, translateX: 5 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Link
+                          href={item.href}
+                          className={`flex items-center py-2 px-4 transition-colors duration-200 ${pathname === item.href
+                            ? 'bg-indigo-100 text-indigo-600'
+                            : 'text-gray-600 hover:bg-indigo-50 hover:text-indigo-600'
+                            }`}
+                        >
+                          <item.icon className="mr-2 h-5 w-5" />
+                          {item.label}
+                        </Link>
+                      </motion.div>
+                    ))}
+                  </div>
+                </nav>
+              </motion.aside>
+            )}
+          </AnimatePresence>
 
           {/* Main content */}
-          <main className="flex-1 overflow-y-auto p-8">
-            {children}
-          </main>
+          <div className="flex-1 flex flex-col overflow-hidden">
+            {/* Scrollable content area */}
+            <main className="flex-1 overflow-y-auto">
+              {!sidebarOpen && (
+                <button
+                  onClick={toggleSidebar}
+                  className="fixed top-4 left-4 z-10 p-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors duration-200"
+                  aria-label="Open Sidebar"
+                >
+                  <Menu size={24} />
+                </button>
+              )}
+              <div className="p-8">
+                {children}
+              </div>
+            </main>
+
+            {/* Fixed Footer */}
+            <footer className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 py-2 px-4 z-10">
+              <div className="flex flex-col sm:flex-row justify-between items-center max-w-6xl mx-auto">
+                {/* <footer className="bg-white border-t border-gray-200 py-2 px-4 z-10">
+              <div className="flex flex-col sm:flex-row justify-between items-center max-w-6xl mx-auto"> */}
+                <p className="text-sm text-gray-600 mb-2 sm:mb-0">
+                  {toolInfo.name} was created by {toolInfo.creator}
+                </p>
+                <Link
+                  href="https://github.com/ritsrnjn/svg-to-image/issues"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center px-3 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-700 transition-colors duration-200"
+                >
+                  <Github className="mr-2 h-4 w-4" />
+                  Found an issue? Report here
+                </Link>
+              </div>
+            </footer>
+          </div>
         </div>
       </body>
     </html>
