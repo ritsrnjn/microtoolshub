@@ -80,12 +80,14 @@ export default function RootLayout({
                       className="flex items-center space-x-2"
                     >
                       {/* <Wrench className="h-8 w-8 text-indigo-600" /> */}
-                      <div className="relative">
-                        <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">
-                          Micro Tools Hub
-                        </span>
-                        <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 transform scale-x-0 transition-transform origin-left group-hover:scale-x-100"></span>
-                      </div>
+                      <Link href="/">
+                        <div className="relative">
+                          <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">
+                            Micro Tools Hub
+                          </span>
+                          <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 transform scale-x-0 transition-transform origin-left group-hover:scale-x-100"></span>
+                        </div>
+                      </Link>
                     </motion.div>
                     <button
                       onClick={toggleSidebar}
