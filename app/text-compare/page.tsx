@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { FileText, AlertCircle, Sun, Moon } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 export default function TextComparePage() {
     const [text1, setText1] = useState('')
@@ -13,7 +14,7 @@ export default function TextComparePage() {
     const [result, setResult] = useState('')
     const [error, setError] = useState('')
     const [conversionCount, setConversionCount] = useState(0)
-    const [darkMode, setDarkMode] = useState(false)
+    let { darkMode } = useDarkMode()
 
     useEffect(() => {
         fetch('/api/counter')
@@ -46,21 +47,6 @@ export default function TextComparePage() {
     return (
         <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'} transition-colors duration-300`}>
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative pb-16">
-                <div className="absolute top-4 right-4 flex items-center space-x-2">
-                    <Sun className="h-5 w-5" />
-                    <Switch
-                        checked={darkMode}
-                        onCheckedChange={setDarkMode}
-                        className={`${darkMode ? 'bg-indigo-600' : 'bg-gray-200'} relative inline-flex h-6 w-11 items-center rounded-full`}
-                    >
-                        <span className="sr-only">Toggle dark mode</span>
-                        <span
-                            className={`${darkMode ? 'translate-x-6' : 'translate-x-1'
-                                } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-                        />
-                    </Switch>
-                    <Moon className="h-5 w-5" />
-                </div>
                 <header className="text-center py-12 sm:py-16 md:py-20">
                     <div className={`inline-block p-2 rounded-lg shadow-lg mb-4 ${darkMode ? 'bg-indigo-600' : 'bg-gradient-to-r from-indigo-500 to-purple-600'}`}>
                         <FileText size={40} className="text-white" />
@@ -80,8 +66,8 @@ export default function TextComparePage() {
                                 value={text1}
                                 onChange={(e) => setText1(e.target.value)}
                                 className={`min-h-[200px] sm:min-h-[300px] mb-4 rounded-lg ${darkMode
-                                        ? 'bg-gray-700 text-gray-100 border-gray-600 focus:border-indigo-500'
-                                        : 'bg-white text-gray-900 border-gray-300 focus:border-indigo-500'
+                                    ? 'bg-gray-700 text-gray-100 border-gray-600 focus:border-indigo-500'
+                                    : 'bg-white text-gray-900 border-gray-300 focus:border-indigo-500'
                                     }`}
                             />
                         </CardContent>
@@ -97,8 +83,8 @@ export default function TextComparePage() {
                                 value={text2}
                                 onChange={(e) => setText2(e.target.value)}
                                 className={`min-h-[200px] sm:min-h-[300px] mb-4 rounded-lg ${darkMode
-                                        ? 'bg-gray-700 text-gray-100 border-gray-600 focus:border-indigo-500'
-                                        : 'bg-white text-gray-900 border-gray-300 focus:border-indigo-500'
+                                    ? 'bg-gray-700 text-gray-100 border-gray-600 focus:border-indigo-500'
+                                    : 'bg-white text-gray-900 border-gray-300 focus:border-indigo-500'
                                     }`}
                             />
                         </CardContent>

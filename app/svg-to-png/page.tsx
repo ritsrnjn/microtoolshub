@@ -3,17 +3,17 @@
 import { useState, useRef, useEffect } from 'react'
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
-import { FileImage, Code, Download, AlertCircle, Sun, Moon } from 'lucide-react'
+import { FileImage, Code, Download, AlertCircle } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import { Switch } from "@/components/ui/switch"
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 export default function SvgToImageConverter() {
     const [svgInput, setSvgInput] = useState('')
     const [imageOutput, setImageOutput] = useState('')
     const [error, setError] = useState('')
     const [conversionCount, setConversionCount] = useState<number | null>(null)
-    const [darkMode, setDarkMode] = useState(false)
     const canvasRef = useRef<HTMLCanvasElement>(null)
+    const { darkMode } = useDarkMode()
 
     useEffect(() => {
         fetch('/api/counter')
@@ -82,23 +82,10 @@ export default function SvgToImageConverter() {
     }
 
     return (
+        // Note: A different approach of doing dark mode.
+        // <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300"></div>
         <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'} transition-colors duration-300`}>
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative pb-16">
-                <div className="absolute top-4 right-4 flex items-center space-x-2">
-                    <Sun className="h-5 w-5" />
-                    <Switch
-                        checked={darkMode}
-                        onCheckedChange={setDarkMode}
-                        className={`${darkMode ? 'bg-indigo-600' : 'bg-gray-200'} relative inline-flex h-6 w-11 items-center rounded-full`}
-                    >
-                        <span className="sr-only">Toggle dark mode</span>
-                        <span
-                            className={`${darkMode ? 'translate-x-6' : 'translate-x-1'
-                                } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-                        />
-                    </Switch>
-                    <Moon className="h-5 w-5" />
-                </div>
                 <header className="text-center py-12 sm:py-16 md:py-20">
                     <div className={`inline-block p-2 rounded-lg shadow-lg mb-4 ${darkMode ? 'bg-indigo-600' : 'bg-gradient-to-r from-indigo-500 to-purple-600'}`}>
                         <FileImage size={40} className="text-white" />

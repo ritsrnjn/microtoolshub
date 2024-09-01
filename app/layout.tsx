@@ -3,11 +3,12 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
 import Link from 'next/link'
-import { FileImage, FileText, Clock, ChevronLeft, ChevronRight, Github, Menu, Wrench } from 'lucide-react'
+import { FileImage, FileText, Clock, ChevronLeft, Menu } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import Footer from '@/components/layout/footer'
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,6 +19,7 @@ export default function RootLayout({
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const pathname = usePathname()
+  const { darkMode } = useDarkMode()
 
   useEffect(() => {
     const handleResize = () => {
@@ -70,15 +72,9 @@ export default function RootLayout({
   const toolInfo = getToolInfo()
 
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <div className="flex h-screen bg-gray-100">
-
-          {/* There are 3 main componets in this layout:
-          - Sidebar
-          - Main content
-          - Fixed Footer */}
-
+    <html lang="en" className={darkMode ? 'dark' : ''}>
+      <body className={`${inter.className} ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-900'}`}>
+        <div className="flex h-screen">
           {/* Sidebar */}
           <AnimatePresence>
             {sidebarOpen && (
@@ -86,7 +82,7 @@ export default function RootLayout({
                 initial={{ width: 0, opacity: 0 }}
                 animate={{ width: 256, opacity: 1 }}
                 exit={{ width: 0, opacity: 0 }}
-                className="bg-white shadow-md overflow-hidden flex-shrink-0"
+                className={`${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-md overflow-hidden flex-shrink-0`}
               >
                 <nav className="h-full flex flex-col py-5 relative">
                   <div className="px-4 flex justify-between items-center mb-6">
@@ -95,7 +91,6 @@ export default function RootLayout({
                       whileTap={{ scale: 0.95 }}
                       className="flex items-center space-x-2"
                     >
-                      {/* <Wrench className="h-8 w-8 text-indigo-600" /> */}
                       <Link href="/">
                         <div className="relative">
                           <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">
@@ -107,10 +102,10 @@ export default function RootLayout({
                     </motion.div>
                     <button
                       onClick={toggleSidebar}
-                      className="p-1 rounded-full hover:bg-gray-200 transition-colors duration-200"
+                      className={`p-1 rounded-full ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'} transition-colors duration-200`}
                       aria-label="Toggle Sidebar"
                     >
-                      <ChevronLeft size={20} />
+                      <ChevronLeft size={20} className={darkMode ? 'text-gray-300' : 'text-gray-600'} />
                     </button>
                   </div>
                   <div className="space-y-2">
@@ -127,8 +122,12 @@ export default function RootLayout({
                         <Link
                           href={item.href}
                           className={`flex items-center py-2 px-4 transition-colors duration-200 ${pathname === item.href
-                            ? 'bg-indigo-100 text-indigo-600'
-                            : 'text-gray-600 hover:bg-indigo-50 hover:text-indigo-600'
+                              ? darkMode
+                                ? 'bg-indigo-900 text-indigo-300'
+                                : 'bg-indigo-100 text-indigo-600'
+                              : darkMode
+                                ? 'text-gray-300 hover:bg-gray-700 hover:text-indigo-300'
+                                : 'text-gray-600 hover:bg-indigo-50 hover:text-indigo-600'
                             }`}
                         >
                           <item.icon className="mr-2 h-5 w-5" />
@@ -149,10 +148,11 @@ export default function RootLayout({
               {!sidebarOpen && (
                 <button
                   onClick={toggleSidebar}
-                  className="fixed top-4 left-4 z-10 p-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors duration-200"
+                  className={`fixed top-4 left-4 z-10 p-2 ${darkMode ? 'bg-gray-800 hover:bg-gray-700' : 'bg-white hover:bg-gray-100'
+                    } rounded-full shadow-md transition-colors duration-200`}
                   aria-label="Open Sidebar"
                 >
-                  <Menu size={24} />
+                  <Menu size={24} className={darkMode ? 'text-gray-300' : 'text-gray-600'} />
                 </button>
               )}
               <div className="p-8">
@@ -163,8 +163,6 @@ export default function RootLayout({
 
           {/* Fixed Footer */}
           <Footer toolInfo={toolInfo} />
-
-
         </div>
       </body>
     </html>
