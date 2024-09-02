@@ -7,7 +7,7 @@ export default function Home() {
     <div className="bg-gray-100  max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <header className="text-center mb-16">
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">
-          Welcome to Micro Tools Hub
+          Welcome to Micro Tools Hub: ADDING A NEW TOOL JSON COMPARE
         </h1>
         <p className="text-xl text-gray-600 max-w-3xl mx-auto">
           An open-source collection of powerful, easy-to-use web tools to enhance your productivity.
