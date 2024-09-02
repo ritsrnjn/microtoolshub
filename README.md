@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+### [Micro Tools Hub](https://nextjs.org/) is an open-source collection of useful web-based tools built with Next.js, React, and TypeScript. Our goal is to provide a set of simple, efficient, and user-friendly tools for everyday tasks.
 
-## Getting Started
+## Features
+- Modern web-based tools for various tasks
+- Built with Next.js 13 and React
+- Responsive design for desktop and mobile use
+- Dark mode support
+- Easy to use interface
 
-First, run the development server:
+## Prerequisites
 
-```bash
+- Node.js (v14.0.0 or later)
+- npm (v6.0.0 or later)
+
+
+## Installation and getting started
+
+1. Clone the repository:
+git clone [https://github.com/ritsrnjn/micro-tools-hub.git](https://github.com/ritsrnjn/micro-tools-hub.git)
+2. Navigate to the project directory:
+cd micro-tools-hub
+3. Install dependencies:
+npm install
+4. Create a .env.local file in the root directory and add any necessary environment variables (refer to .env.example).
+5. Run the development server:
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+6. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Usage
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1. Navigate to the desired tool from the homepage.
+2. Follow the on-screen instructions for each tool.
+3. Use the dark mode toggle in the footer to switch between light and dark themes.
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+## Contributing
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+We welcome contributions to Micro Tools Hub! Please see our Contributing Guide (CONTRIBUTING.md) for more details on how to get started.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## License
 
-## Deploy on Vercel
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## Contact
+
+If you have any questions or suggestions, please open an issue or submit a pull request.
