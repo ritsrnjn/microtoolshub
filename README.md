@@ -16,7 +16,7 @@
 ## Installation and getting started
 
 1. Clone the repository:
-git clone [https://github.com/ritsrnjn/micro-tools-hub.git](https://github.com/ritsrnjn/micro-tools-hub.git)
+git clone [https://github.com/ritsrnjn/microtoolshub.git](https://github.com/ritsrnjn/microtoolshub.git)
 2. Navigate to the project directory:
 cd micro-tools-hub
 3. Install dependencies:
