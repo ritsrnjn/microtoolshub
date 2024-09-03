@@ -167,7 +167,7 @@ export default function ReelsHooksGalleryPage() {
     return (
         <ToolLayout2
             title="Reels Hooks Gallery"
-            description="Browse and watch short video clips for social media reels"
+            description="Browse and download short video hooks for your next viral reels"
             icon={Video}
         >
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-12">
