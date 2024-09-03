@@ -3,7 +3,7 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
 import Link from 'next/link'
-import { FileImage, FileText, Clock, ChevronLeft, Menu } from 'lucide-react'
+import { FileImage, FileText, Clock, ChevronLeft, Menu, VideoIcon } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -45,6 +45,12 @@ export default function RootLayout({
             case '/svg-to-png':
                 return {
                     name: 'SVG to PNG Tool',
+                    creator: 'Ritesh Ranjan',
+                    creatorProfile: 'https://x.com/ritsrnjn'
+                }
+            case '/reels-hooks-gallery':
+                return {
+                    name: 'Reels Hooks Gallery',
                     creator: 'Ritesh Ranjan',
                     creatorProfile: 'https://x.com/ritsrnjn'
                 }
@@ -115,6 +121,7 @@ export default function RootLayout({
                                     <div className="space-y-2">
                                         {[
                                             { href: '/svg-to-png', icon: FileImage, label: 'SVG to PNG' },
+                                            { href: '/reels-hooks-gallery', icon: VideoIcon, label: 'Reels Hooks Gallery' },
                                             { href: '/text-compare', icon: FileText, label: 'Text Compare' },
                                             { href: '/epoch-converter', icon: Clock, label: 'Epoch Converter' },
                                         ].map((item) => (
